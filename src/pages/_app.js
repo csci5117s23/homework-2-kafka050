@@ -1,5 +1,13 @@
 import '@/styles/globals.css'
 
-export default function App({ Component, pageProps }) {
-  return <Component {...pageProps} />
+import { ClerkProvider } from '@clerk/nextjs';
+
+function App({ Component, pageProps }) {
+  return (
+    <ClerkProvider {...pageProps} >
+      <Component {...pageProps} />
+    </ClerkProvider>
+  );
 }
+
+export default App;

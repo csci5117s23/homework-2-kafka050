@@ -5,9 +5,9 @@ import StatusControls from "./StatusControls"
 import Link from "next/link"
 
 export default function TodoCard(props) {
-    const title = props.title
+    const [title, setTitle] = useState(props.title)
     const [status, setStatus] = useState(props.status)
-    const content = props.content
+    const [content, setContent] = useState(props.content)
     const editing = props.editing
     const id = props.id
     if (editing) {

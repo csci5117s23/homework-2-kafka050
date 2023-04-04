@@ -1,11 +1,22 @@
 import TodoCard from "@/components/TodoCard"
+import { useAuth, UserButton } from "@clerk/nextjs"
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
-export default function todos() {
+import { useRouter } from "next/router"
+import Redirect from "@/components/Redirect"
+import TopBar from "@/components/TopBar"
+export default function Todos() {
     // GET ALL TODO ITEMS FROM DB
-    // THEN REPLACE CURRENT TODOCARDS WITH THOSE
+    // THEN REPLACE CURRENT TODOCARDS WITH THOSE  
+    const { getToken, isLoaded, isSignedIn } = useAuth();
+  
+    if (!isLoaded || !isSignedIn) {
+        // You can handle the loading or signed state separately
+        return <Redirect location='/'></Redirect>
+    }
 
-    return (
+    return (<>
+        <TopBar title='Your Todo List'></TopBar>
         <div
             css={css`
                 display: flex;
@@ -22,5 +33,5 @@ export default function todos() {
             <TodoCard title='testy' status='Todo' content='Aiden' id='6'></TodoCard>
             <TodoCard title='testy' status='Todo' content='Aiden' id='7'></TodoCard>
         </div>
-    )
+    </>)
 }
