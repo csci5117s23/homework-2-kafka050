@@ -1,16 +1,32 @@
 import { useState } from "react"
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
-import StatusControls from "./StatusControls"
 import Link from "next/link"
+import { useAuth } from "@clerk/nextjs"
+import { editTodo } from "@/modules/Data"
 
 export default function TodoCard(props) {
-    const [title, setTitle] = useState(props.title)
-    const [status, setStatus] = useState(props.status)
-    const [content, setContent] = useState(props.content)
+    const [edited, setEdited] = useState(false)
+    const [item, setItem] = useState(props.item)
+    const [done, setDone] = useState(props.done)
     const editing = props.editing
-    const id = props.id
+    const todoId = props.id
+    const { isLoaded, userId, sessionId, getToken } = useAuth()
+    async function applyChanges() {
+        if (!userId) return
+        const token = await getToken({ template: "codehooks" })
+        editTodo(token, todoId, {item: item})
+        setEdited(false)
+    }
+
+    async function changeIfDone() {
+        if (!userId) return
+        const token = await getToken({ template: 'codehooks' })
+        editTodo(token, todoId, {done: !done})
+        setDone(!done)
+    }
     if (editing) {
+        console.log('item: ' + item)
         return (
             <div className="fullTodoItem"
                 css={css`
@@ -24,14 +40,18 @@ export default function TodoCard(props) {
                 `}
             >
                 <div>
-                    <label htmlFor="todoTitle">Item Title: </label>
-                    <input type='text' id='todoTitle' value={title} onChange={(e)=>setTitle(e.target.value)}></input>
+                    <label htmlFor="todoItem">Item: </label>
+                    <input type='text' id='todoItem' value={item} 
+                        onChange={(e) => {
+                            setItem(e.target.value)
+                            setEdited(true)
+                        }}
+                    ></input>
                 </div>
                 <div>
-                    <label htmlFor='todoContent'>Item content: </label>
-                    <textarea id='todoContent' value={content} onChange={(e)=>setContent(e.target.value)}></textarea>
+                    <button id='apply' onClick={applyChanges}>{edited ? 'Apply Changes' : 'Changes Applied'}</button>
                 </div>
-                <StatusControls status={status} setStatus={setStatus}></StatusControls>
+                <button onClick={changeIfDone}>Set as {done ? 'Todo' : 'Done'}</button>
             </div>
         )
     } else {
@@ -41,18 +61,17 @@ export default function TodoCard(props) {
                     display: flex;
                     flex-direction: column;
                     width: 20rem;
-                    height: 10rem;
+                    height: 7.5rem;
                     background-color: slategrey;
                     padding: 2rem;
                     margin: 2rem;
                     border-radius: 1rem;
                 `}
             >
-                <Link href={'/todos/'+id}>
-                    <h2>{title}</h2>
+                <Link href={'/todos/'+todoId}>
+                    <h2>{item}</h2>
                 </Link>
-                <p>{content}</p>
-                <StatusControls status={status} setStatus={setStatus}></StatusControls>
+                <button onClick={()=>setDone(!done)}>Set as {done ? 'Todo' : 'Done'}</button>
             </div>
         )
     }
