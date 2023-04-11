@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
   const { isSignedIn } = useAuth()
-  if (isSignedIn) return <Todos></Todos>
+  if (isSignedIn) return <Redirect location='/todos'></Redirect>
 
   return (
     <>

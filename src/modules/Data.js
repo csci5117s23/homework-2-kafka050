@@ -1,8 +1,15 @@
 const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL
 
 export const getTodos = async (authToken, userId) => {
-    const result = await fetch(`${backend_base}/todos?userId=${userId}`, {
+    const result = await fetch(`${backend_base}/todos?userId=${userId}&done=false`, {
         'method':'GET',
+        'headers': {'Authorization': 'Bearer ' + authToken}
+    })
+    return await result.json()
+}
+export const getDone = async (authToken, userId) => {
+    const result = await fetch(`${backend_base}/todos?userId=${userId}&done=true`, {
+        'method': 'GET',
         'headers': {'Authorization': 'Bearer ' + authToken}
     })
     return await result.json()

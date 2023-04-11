@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import { useAuth, UserButton } from "@clerk/nextjs";
+import Link from "next/link";
 
 
 export default function TopBar(props) {
@@ -9,16 +10,25 @@ export default function TopBar(props) {
         <div css={css`
             top: 0;
             height: 10%;
+            width: 100%;
             display: flex;
             flex-direction: row;
-            justify-content: space-between;
+            justify-content: space-evenly;
             background-color: slategray;
         `}>
-            <p css={css`
-                margin: auto 2%;
-            `}
-            >{title}</p>
-            <UserButton></UserButton>
+            <Link 
+                css={css`flex: 1; margin: auto; display: flex; justify-content: center;`} 
+                href={props.navUrl}
+            >{props.navName}
+            </Link>
+            <h2 
+                css={css`flex: 1; margin: auto; display: flex; justify-content: center;`}
+                >{title}
+            </h2>
+            <div 
+                css={css`flex: 1; margin: auto; display: flex; justify-content: center;`}
+            ><UserButton></UserButton>
+            </div>
         </div>
     )
 }

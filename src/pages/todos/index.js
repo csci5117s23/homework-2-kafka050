@@ -4,17 +4,14 @@ import { useAuth, UserButton } from "@clerk/nextjs"
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import TopBar from "@/components/TopBar"
-import { useCallback, useEffect, useState } from "react"
-import Home from ".."
+import { useCallback, useState } from "react"
+import Redirect from "@/components/Redirect"
+import AddTodo from "@/components/AddTodo"
 
-export default function Todos() {
-    // GET ALL TODO ITEMS FROM DB
-    // THEN REPLACE CURRENT TODOCARDS WITH THOSE  
+export default function Todos() { 
     const [todos, setTodos] = useState([])
     const [loading, setLoading] = useState(true)
-
-    const { isLoaded, userId, sessionId, getToken } = useAuth()
-    // FOR TESTING BEFORE MAKING CREATE TODO ITEM FUNCTIONALITY
+    const { isLoaded, userId, getToken } = useAuth()
 
     const fetchData = useCallback(async () => {
         if (!userId) return
@@ -24,42 +21,21 @@ export default function Todos() {
         setTodos(data);
         setLoading(false);
       }, [getToken, userId])
-    fetchData()
 
     if (!isLoaded || !userId) {
         // You can handle the loading or signed state separately
-        return <Home></Home>
+        return <Redirect location='/'></Redirect>
     }
-    
 
+    fetchData()
     const todosArray = []
-    console.log(todos)
     for (const todo of todos) {
         todosArray.push(<TodoCard item={todo.item} done={todo.done} id={todo._id}></TodoCard>)
     }
 
-    async function newTodo() {
-        const token = await getToken({ template: 'codehooks' })
-        const newItem = document.getElementById('newTodo').value
-        const todo = {
-            userId: userId,
-            item: newItem
-        }
-        await addTodo(token, todo)
-        fetchData()
-    }
-
     return (<>
-        <TopBar title='Your Todo List'></TopBar>
-        <div
-            css={css`
-            
-            `}
-        >
-            <label htmlFor="newTodo">Add a todo item: </label>
-            <input type='text' id='newTodo'></input>
-            <button onClick={newTodo}>Add</button>
-        </div>
+        <TopBar navUrl='/done' navName='View your completed todos' title='Your Todo List'></TopBar>
+        <AddTodo setLoading={setLoading}></AddTodo>
         <div
             css={css`
                 display: flex;

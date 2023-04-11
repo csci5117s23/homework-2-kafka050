@@ -6,6 +6,8 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react";
 import Home from "..";
+import Redirect from "@/components/Redirect";
+import FullTodoItem from "@/components/FullTodoItem";
 
 
 export default function Todo() {
@@ -26,11 +28,16 @@ export default function Todo() {
         }
         fetchData();
       }, [getToken, userId, todo])
+
+      if (!isLoaded || !userId) {
+        // You can handle the loading or signed state separately
+        return <Redirect location='/'></Redirect>
+    }
     if (todoItem) {
         return (
             <>
                 <TopBar title='Your Todo List'></TopBar>
-                <TodoCard item={todoItem.item} done={todoItem.done} editing={true} id={todo}></TodoCard>
+                <FullTodoItem item={todoItem.item} done={todoItem.done} editing={true} id={todo}></FullTodoItem>
                 <Link href='/todos'>View All Items</Link>
             </>
         )
