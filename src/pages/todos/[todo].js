@@ -36,9 +36,8 @@ export default function Todo() {
     if (todoItem) {
         return (
             <>
-                <TopBar title='Your Todo List'></TopBar>
+                <TopBar navUrl='/todos' navName='View your todo list' title={todoItem.item}></TopBar>
                 <FullTodoItem item={todoItem.item} done={todoItem.done} editing={true} id={todo}></FullTodoItem>
-                <Link href='/todos'>View All Items</Link>
             </>
         )
     } else {

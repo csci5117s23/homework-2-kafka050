@@ -4,7 +4,7 @@ import { useAuth, UserButton } from "@clerk/nextjs"
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import TopBar from "@/components/TopBar"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import Redirect from "@/components/Redirect"
 import AddTodo from "@/components/AddTodo"
 
@@ -22,12 +22,18 @@ export default function Todos() {
         setLoading(false);
       }, [getToken, userId])
 
+    useEffect(() => {
+        async function firstLoad() {
+            fetchData()
+        }
+        firstLoad()
+    }, [fetchData])
+
     if (!isLoaded || !userId) {
         // You can handle the loading or signed state separately
         return <Redirect location='/'></Redirect>
     }
 
-    fetchData()
     const todosArray = []
     for (const todo of todos) {
         todosArray.push(<TodoCard item={todo.item} done={todo.done} id={todo._id}></TodoCard>)
@@ -35,7 +41,7 @@ export default function Todos() {
 
     return (<>
         <TopBar navUrl='/done' navName='View your completed todos' title='Your Todo List'></TopBar>
-        <AddTodo setLoading={setLoading}></AddTodo>
+        {/*<AddTodo setLoading={setLoading}></AddTodo>*/}
         <div
             css={css`
                 display: flex;
