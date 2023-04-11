@@ -41,7 +41,7 @@ export default function Todos() {
 
     return (<>
         <TopBar navUrl='/done' navName='View your completed todos' title='Your Todo List'></TopBar>
-        {/*<AddTodo setLoading={setLoading}></AddTodo>*/}
+        <AddTodo setLoading={setLoading} category='General'></AddTodo>
         <div
             css={css`
                 display: flex;
