@@ -36,8 +36,8 @@ export default function Todo() {
     if (todoItem) {
         return (
             <>
-                <TopBar navUrl='/todos' navName='View your todo list' title={todoItem.item}></TopBar>
-                <FullTodoItem item={todoItem.item} done={todoItem.done} editing={true} id={todo}></FullTodoItem>
+                <TopBar navUrl='/todos' navName='View your todo list' title={todoItem.item.slice(0, 20)}></TopBar>
+                <FullTodoItem item={todoItem.item} done={todoItem.done} category={todoItem.category} id={todo}></FullTodoItem>
             </>
         )
     } else {

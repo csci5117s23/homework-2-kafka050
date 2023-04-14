@@ -55,7 +55,7 @@ export const addTodo = async (authToken, todo) => {
         },
         'body': JSON.stringify(todo)
     })
-    return await result.json();
+    return await result.json()
 }
 
 export const editTodo = async (authToken, todoId, newTodo) => {
@@ -67,6 +67,7 @@ export const editTodo = async (authToken, todoId, newTodo) => {
         },
         'body': JSON.stringify(newTodo)
     })
+    return await result.json()
 }
 
 export const getCategories = async (authToken, userId) => {
