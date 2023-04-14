@@ -12,10 +12,14 @@ const todoYup = object({
     userId: string().required(),
     item: string().required().default('Todo Item'),
     done: boolean().required().default(false),
-    category: string(),
+    category: string().required().default('General'),
     createdOn: date().default(() => new Date()),
 })
-crudlify(app, {todos: todoYup})
+const categoriesYup = object({
+    userId: string().required(),
+    category: string().required(),
+})
+crudlify(app, {todos: todoYup, categories: categoriesYup})
 
 // bind to serverless runtime
 export default app.init()

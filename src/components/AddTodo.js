@@ -10,10 +10,11 @@ export default function AddTodo(props) {
         const newItem = document.getElementById('newTodo').value
         const todo = {
             userId: userId,
-            item: newItem
+            item: newItem,
+            category: props.category
         }
         await addTodo(token, todo)
-        props.setLoading()
+        props.setLoading(true)
     }
     return (
         <div

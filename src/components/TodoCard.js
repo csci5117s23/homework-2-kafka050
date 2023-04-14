@@ -17,7 +17,7 @@ export default function TodoCard(props) {
                 border-radius: 1rem;
             `}
         >
-            <Link href={'/todos/'+props.id}>
+            <Link href={'/todo/'+props.id}>
                 <h2>{props.item.length > 20 ? props.item.slice(0, 20) : props.item}</h2>
             </Link>
             <DoneButton id={props.id} done={props.done} ></DoneButton>

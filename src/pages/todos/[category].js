@@ -1,17 +1,19 @@
-import TodoCard from "@/components/TodoCard"
-import { getCategories, getTodos } from "@/modules/Data"
-import { useAuth } from "@clerk/nextjs"
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
-import TopBar from "@/components/TopBar"
-import { useCallback, useEffect, useState } from "react"
-import Redirect from "@/components/Redirect"
 import AddTodo from "@/components/AddTodo"
-import CategoryLinks from "@/components/CategoryLinks"
-import AddCategory from "@/components/AddCategory"
+import Redirect from "@/components/Redirect"
+import TodoCard from "@/components/TodoCard"
+import TopBar from "@/components/TopBar"
+import { getTodosByCategory } from "@/modules/Data"
+import { useAuth } from "@clerk/nextjs"
+import { useRouter } from "next/router"
+import { useCallback, useEffect, useState } from "react"
+import Link from "next/link"
 
-export default function Todos() { 
-    const [categories, setCategories] = useState([])
+export default function TodosByCategory() {
+    const router = useRouter()
+    const { category } = router.query 
+
     const [todos, setTodos] = useState([])
     const [loading, setLoading] = useState(true)
     const { isLoaded, userId, getToken } = useAuth()
@@ -20,14 +22,11 @@ export default function Todos() {
         if (!userId) return
         if (!loading) return
         const token = await getToken({ template: 'codehooks' })
-        const dataTodos = await getTodos(token, userId)
-        const dataCategories = await getCategories(token, userId)
-
+        const data = await getTodosByCategory(token, userId, category)
         // update state -- configured earlier.
-        setTodos(dataTodos);
-        setCategories(dataCategories)
+        setTodos(data);
         setLoading(false);
-      }, [getToken, userId, loading])
+      }, [getToken, userId, category, loading])
 
     useEffect(() => {
         async function firstLoad() {
@@ -35,7 +34,7 @@ export default function Todos() {
         }
         firstLoad()
     }, [fetchData])
-    
+
     if (!isLoaded || !userId) {
         // You can handle the loading or signed state separately
         return <Redirect location='/'></Redirect>
@@ -47,10 +46,9 @@ export default function Todos() {
     }
 
     return (<>
-        <TopBar navUrl='/done' navName='View your completed todos' title='Your Todo List'></TopBar>
-        <CategoryLinks categories={categories}></CategoryLinks>
-        <AddCategory setLoading={setLoading}></AddCategory>
-        <AddTodo setLoading={setLoading} category='General'></AddTodo>
+        <TopBar navUrl='/todos' navName='View full todo list' title={`Category: ${category}`}></TopBar>
+        <AddTodo setLoading={setLoading} category={category}></AddTodo>
+        <Link href={`/done/${category}`}>View Completed items in {category}</Link>
         <div
             css={css`
                 display: flex;
